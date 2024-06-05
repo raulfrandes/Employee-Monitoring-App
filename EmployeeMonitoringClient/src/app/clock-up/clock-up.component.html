@@ -1,0 +1,12 @@
+<div class="container">
+    <h2>Clock Up</h2>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <form (ngSubmit)="clockUp()">
+      <div class="form-group">
+        <label for="arrivalTime">Arrival Time</label>
+        <input type="time" id="arrivalTime" [(ngModel)]="arrivalTime" name="arrivalTime" class="form-control" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Clock Up</button>
+    </form>
+  </div>
+  

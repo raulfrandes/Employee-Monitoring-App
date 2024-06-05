@@ -1,0 +1,175 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 bg-dark sidebar">
+            <h2 class="text-white text-center py-4">Welcome, Administrator</h2>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/admin-dashboard')">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/manage-employees')">Manage Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/manage-leaders')">Manage Leaders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 main-content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+                <span class="navbar-brand">Manage Employees</span>
+                <button class="btn btn-primary" (click)="openAddModal()">Add Employee</button>
+            </nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Name</th>
+                                    <th>Telephone</th>
+                                    <th>Email</th>
+                                    <th>Job Title</th>
+                                    <th>Department</th>
+                                    <th>Birth Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="employees.length === 0">
+                                    <td colspan="7" class="text-center">No content in table</td>
+                                </tr>
+                                <tr *ngFor="let employee of employees">
+                                    <td>{{ employee.username }}</td>
+                                    <td>{{ employee.password }}</td>
+                                    <td>{{ employee.name }}</td>
+                                    <td>{{ employee.telephone }}</td>
+                                    <td>{{ employee.email }}</td>
+                                    <td>{{ employee.jobTitle }}</td>
+                                    <td>{{ employee.department }}</td>
+                                    <td>{{ formatBirthDate(employee.birthDate) }}</td>
+                                    <td>
+                                        <button class="btn btn-warning" (click)="openUpdateModal(employee)">Edit</button>
+                                        <button class="btn btn-danger" (click)="deleteEmployee(employee.id)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="addEmployee()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" [(ngModel)]="newEmployee.username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" [(ngModel)]="newEmployee.password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" [(ngModel)]="newEmployee.name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" id="telephone" [(ngModel)]="newEmployee.telephone" name="telephone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="newEmployee.email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title</label>
+                        <input type="text" id="jobTitle" [(ngModel)]="newEmployee.jobTitle" name="jobTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" [(ngModel)]="newEmployee.department" name="department" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" id="birthDate" [(ngModel)]="date" name="birthDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthTime">Birth Time</label>
+                        <input type="time" id="birthTime" [(ngModel)]="time" name="birthTime" class="form-control" required>
+                    </div>
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Employee Modal -->
+<div class="modal fade" id="updateEmployeeModal" tabindex="-1" aria-labelledby="updateEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateEmployeeModalLabel">Update Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="updateEmployee()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" [(ngModel)]="selectedEmployee.username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" [(ngModel)]="selectedEmployee.password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" [(ngModel)]="selectedEmployee.name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" id="telephone" [(ngModel)]="selectedEmployee.telephone" name="telephone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="selectedEmployee.email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title</label>
+                        <input type="text" id="jobTitle" [(ngModel)]="selectedEmployee.jobTitle" name="jobTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" [(ngModel)]="selectedEmployee.department" name="department" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" id="birthDate" [(ngModel)]="date" name="birthDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthTime">Birth Time</label>
+                        <input type="time" id="birthTime" [(ngModel)]="time" name="birthTime" class="form-control" required>
+                    </div>
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

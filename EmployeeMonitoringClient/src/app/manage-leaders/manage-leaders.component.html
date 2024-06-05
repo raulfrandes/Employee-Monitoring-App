@@ -1,0 +1,185 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 bg-dark sidebar">
+            <h2 class="text-white text-center py-4">Welcome, Administrator</h2>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/admin-dashboard')">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/manage-employees')">Manage Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/manage-leaders')">Manage Leaders</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 main-content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+                <span class="navbar-brand">Manage Leaders</span>
+                <button class="btn btn-primary" (click)="openAddModal()">Add Leader</button>
+            </nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Password</th>
+                                    <th>Name</th>
+                                    <th>Telephone</th>
+                                    <th>Email</th>
+                                    <th>Job Title</th>
+                                    <th>Department</th>
+                                    <th>Birth Date</th>
+                                    <th>Leadership Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="leaders.length === 0">
+                                    <td colspan="7" class="text-center">No content in table</td>
+                                </tr>
+                                <tr *ngFor="let leader of leaders">
+                                    <td>{{ leader.username }}</td>
+                                    <td>{{ leader.password }}</td>
+                                    <td>{{ leader.name }}</td>
+                                    <td>{{ leader.telephone }}</td>
+                                    <td>{{ leader.email }}</td>
+                                    <td>{{ leader.jobTitle }}</td>
+                                    <td>{{ leader.department }}</td>
+                                    <td>{{ formatBirthDate(leader.birthDate) }}</td>
+                                    <td>{{ leader.leadershipRole }}</td>
+                                    <td>
+                                        <button class="btn btn-warning" (click)="openUpdateModal(leader)">Edit</button>
+                                        <button class="btn btn-danger" (click)="deleteLeader(leader.id)">Delete</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Leader Modal -->
+<div class="modal fade" id="addLeaderModal" tabindex="-1" aria-labelledby="addLeaderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addLeaderModalLabel">Add Leader</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="addLeader()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" [(ngModel)]="newLeader.username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" [(ngModel)]="newLeader.password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" [(ngModel)]="newLeader.name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" id="telephone" [(ngModel)]="newLeader.telephone" name="telephone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="newLeader.email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title</label>
+                        <input type="text" id="jobTitle" [(ngModel)]="newLeader.jobTitle" name="jobTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" [(ngModel)]="newLeader.department" name="department" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" id="birthDate" [(ngModel)]="date" name="birthDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthTime">Birth Time</label>
+                        <input type="time" id="birthTime" [(ngModel)]="time" name="birthTime" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="leaderhipRole">Leadership Role</label>
+                        <input type="text" id="leadershipRole" [(ngModel)]="newLeader.leadershipRole" name="leaderhipRole" class="form-control" required>
+                    </div>
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Leader Modal -->
+<div class="modal fade" id="updateLeaderModal" tabindex="-1" aria-labelledby="updateLeaderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updateLeaderModalLabel">Update Leader</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="updateLeader()">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" [(ngModel)]="selectedLeader.username" name="username" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="text" id="password" [(ngModel)]="selectedLeader.password" name="password" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" [(ngModel)]="selectedLeader.name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telephone">Telephone</label>
+                        <input type="text" id="telephone" [(ngModel)]="selectedLeader.telephone" name="telephone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" [(ngModel)]="selectedLeader.email" name="email" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jobTitle">Job Title</label>
+                        <input type="text" id="jobTitle" [(ngModel)]="selectedLeader.jobTitle" name="jobTitle" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="department">Department</label>
+                        <input type="text" id="department" [(ngModel)]="selectedLeader.department" name="department" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" id="birthDate" [(ngModel)]="date" name="birthDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthTime">Birth Time</label>
+                        <input type="time" id="birthTime" [(ngModel)]="time" name="birthTime" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="leaderhipRole">Leadership Role</label>
+                        <input type="text" id="leadershipRole" [(ngModel)]="selectedLeader.leadershipRole" name="leaderhipRole" class="form-control" required>
+                    </div>
+                    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 bg-dark sidebar">
+            <h2 class="text-white text-center py-4">Welcome, {{ leader?.name }}!</h2>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/leader-dashboard')">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/employee-monitoring')">Employee Monitoring</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="navigateTo('/tasks')">Tasks</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" (click)="logout()">Logout</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 main-content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+                <span class="navbar-brand">Employee Monitoring</span>
+                <div class="d-flex align-items-center">
+                    <span class="mr-2">{{ leader?.name }}</span>
+                </div>
+            </nav>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Logged-in Employees</h2>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Job Title</th>
+                                    <th>Arrival Time</th>
+                                    <th>Assign Task</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="sessions.length === 0">
+                                    <td colspan="4" class="text-center">No logged-in employees</td>
+                                </tr>
+                                <tr *ngFor="let session of sessions">
+                                    <td>{{ session.loggedInEmployee.name }}</td>
+                                    <td>{{ session.loggedInEmployee.jobTitle }}</td>
+                                    <td>{{ session.arrivalTime }}</td>
+                                    <td>
+                                        <select [(ngModel)]="selectedTask" class="form-control">
+                                            <option *ngFor="let task of unassignedTasks" [ngValue]="task">{{ task.name }}</option>
+                                        </select>
+                                        <button class="btn btn-primary" (click)="assignTask(session.loggedInEmployee.id)">Assign</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

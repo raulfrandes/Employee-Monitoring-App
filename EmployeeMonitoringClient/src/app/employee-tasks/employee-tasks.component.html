@@ -1,0 +1,60 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 bg-dark sidebar">
+        <h2 class="text-white text-center py-4">Welcome, {{ employee?.name }}!</h2>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="navigateTo('/employee-dashboard')">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="navigateTo('/employee-tasks')">My Tasks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10 main-content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+          <span class="navbar-brand">My Tasks</span>
+          <div class="d-flex align-items-center">
+            <span class="mr-2">{{ employee?.name }}</span>
+          </div>
+        </nav>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-12">
+              <h2>My Tasks</h2>
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Deadline</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngIf="tasks.length === 0">
+                    <td colspan="5" class="text-center">No content in table</td>
+                  </tr>
+                  <tr *ngFor="let task of tasks">
+                    <td>{{ task.name }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.deadline }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>
+                      <button class="btn btn-primary" (click)="completeTask(task)">Complete Task</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

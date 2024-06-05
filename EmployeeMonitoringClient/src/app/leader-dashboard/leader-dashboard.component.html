@@ -1,0 +1,52 @@
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2 bg-dark sidebar">
+        <h2 class="text-white text-center py-4">Welcome, {{ leader?.name }}!</h2>
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="navigateTo('/leader-dashboard')">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="navigateTo('/employee-monitoring')">Employee Monitoring</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="navigateTo('/tasks')">Tasks</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-white" (click)="logout()">Logout</a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10 main-content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+          <span class="navbar-brand">Dashboard</span>
+          <div class="d-flex align-items-center">
+            <span class="mr-2">{{ leader?.name }}</span>
+          </div>
+        </nav>
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-9">
+              <h2>Welcome to your dashboard, {{ leader?.name }}!</h2>
+              <p>Here you can manage your tasks and view notifications.</p>
+            </div>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="card-header">
+                  Notifications
+                </div>
+                <div class="card-body">
+                  <ul class="list-group">
+                    <li *ngFor="let notification of notifications" class="list-group-item">
+                      {{ notification }}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
